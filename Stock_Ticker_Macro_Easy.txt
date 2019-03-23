@@ -1,0 +1,65 @@
+Sub TradingVolumes()
+
+Dim i As Long
+Dim LastRow As Long
+Dim TickerSymbol As String
+Dim TotalVolume As Double
+Dim Summary_Table_Row As Long
+
+Dim ws As Worksheet
+Dim starting_ws As Worksheet
+Set starting_ws = ActiveSheet 'remember which worksheet is active in the beginning
+
+For Each ws In ActiveWorkbook.Worksheets
+
+    ws.Activate
+
+    'Assign variables per sheet
+    LastRow = Cells(Rows.Count, 1).End(xlUp).Row
+    Summary_Table_Row = 2
+    TotalVolume = 0
+    
+    'Print column headers
+    Range("I1").Value = "Ticker"
+    Range("J1").Value = "Total Stock Volume"
+    
+    
+        'Loop through Ticker Symbols and Volumes, outputting in Columns I and J
+        
+            
+            For i = 2 To LastRow
+            
+                If Cells(i + 1, 1).Value = Cells(i, 1).Value Then
+                
+                 'Keep summing Volumes
+                    TotalVolume = TotalVolume + Cells(i, 7).Value
+        
+                Else
+            
+                    'Assign Ticker Symbol of the last row of its type
+                    TickerSymbol = Cells(i, 1).Value
+                
+                
+                    'Add the last volume to Trading Volume
+                    TotalVolume = TotalVolume + Cells(i, 7).Value
+                    
+                    'Output values
+                    Range("I" & Summary_Table_Row).Value = TickerSymbol
+                    Range("J" & Summary_Table_Row).Value = TotalVolume
+                                                    
+                    'Prep variables for next iteration
+                    TotalVolume = 0
+                    Summary_Table_Row = Summary_Table_Row + 1
+              
+                End If
+            
+            Next i
+
+Next
+
+starting_ws.Activate
+
+End Sub
+
+
+
